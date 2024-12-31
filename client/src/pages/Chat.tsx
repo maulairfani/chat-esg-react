@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { User } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import ChatThread from "@/components/ChatThread";
 import ChatInput from "@/components/ChatInput";
+import ModelSelector from "@/components/ModelSelector";
 import { mockChats } from "@/lib/mockData";
 
 function App() {
@@ -10,6 +13,7 @@ function App() {
   const [activeChat, setActiveChat] = useState(mockChats[0]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
+  const [model, setModel] = useState("gpt-3.5");
 
   const createNewChat = () => {
     const newChat = {
@@ -38,19 +42,12 @@ function App() {
       messages: updatedMessages
     }));
 
-    // Simulate streaming by adding the assistant message with empty content
-    const streamingMessage = { role: "assistant" as const, content: "" };
-    setActiveChat(prev => ({
-      ...prev,
-      messages: [...updatedMessages, streamingMessage]
-    }));
-
     // Simulate streaming response
     const response = "This is a simulated streaming response that appears gradually...";
     let streamedContent = "";
 
     for (let i = 0; i < response.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, 50)); // Adjust speed as needed
+      await new Promise(resolve => setTimeout(resolve, 50));
       streamedContent += response[i];
 
       setActiveChat(prev => ({
@@ -74,14 +71,20 @@ function App() {
         onCollapse={setIsSidebarCollapsed}
         onNewChat={createNewChat}
       />
-      <main className={`flex-1 flex flex-col transition-all duration-300`}>
-        <ScrollArea className="flex-1 px-4 py-4">
+      <main className="flex-1 flex flex-col transition-all duration-300">
+        <div className="border-b p-4 flex items-center justify-between">
+          <ModelSelector value={model} onChange={setModel} />
+          <Button variant="ghost" size="icon">
+            <User className="h-5 w-5" />
+          </Button>
+        </div>
+        <ScrollArea className="flex-1 px-4 py-6">
           <div className="mx-auto max-w-3xl">
             <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
           </div>
         </ScrollArea>
         <div className="border-t bg-background p-4">
-          <div className="mx-auto max-w-3xl px-4">
+          <div className="mx-auto max-w-3xl">
             <ChatInput
               onSend={simulateStreamingResponse}
               disabled={isStreaming}
