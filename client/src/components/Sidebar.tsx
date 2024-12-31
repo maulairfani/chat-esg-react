@@ -19,7 +19,8 @@ interface SidebarProps {
 export default function Sidebar({ chats, activeChat, onSelectChat }: SidebarProps) {
   return (
     <div className="flex h-screen flex-col border-r">
-      <div className="p-4">
+      <div className="border-b p-4">
+        <h1 className="text-2xl font-bold text-primary mb-4">ChatESG</h1>
         <Button className="w-full" variant="outline">
           <Plus className="mr-2 h-4 w-4" />
           New Chat
