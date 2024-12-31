@@ -4,6 +4,7 @@ import Sidebar from "@/components/Sidebar";
 import ChatThread from "@/components/ChatThread";
 import ChatInput from "@/components/ChatInput";
 import DocumentSelector from "@/components/DocumentSelector";
+import LoadingSteps from "@/components/LoadingSteps";
 import { mockChats } from "@/lib/mockData";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
   const [activeChat, setActiveChat] = useState(mockChats[0]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(-1);
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
 
@@ -27,9 +29,10 @@ function App() {
   };
 
   const simulateStreamingResponse = async (message: string) => {
-    if (!selectedCompany || !selectedYear) return; // Don't process if document not selected
+    if (!selectedCompany || !selectedYear) return;
 
     setIsStreaming(true);
+    setLoadingStep(0);
 
     // Add user message immediately
     const updatedMessages = [...activeChat.messages, { 
@@ -41,6 +44,12 @@ function App() {
       ...prev,
       messages: updatedMessages
     }));
+
+    // Simulate the loading steps
+    for (let step = 0; step < 3; step++) {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setLoadingStep(step + 1);
+    }
 
     // Simulate streaming response
     const response = "This is a simulated streaming response that appears gradually...";
@@ -76,6 +85,7 @@ function App() {
     }
 
     setIsStreaming(false);
+    setLoadingStep(-1);
   };
 
   // Check if document is selected (both company and year)
@@ -118,7 +128,10 @@ function App() {
               </div>
             )}
             {activeChat.messages.length > 0 && (
-              <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
+              <>
+                <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
+                {loadingStep >= 0 && <LoadingSteps currentStep={loadingStep} />}
+              </>
             )}
           </div>
         </ScrollArea>
