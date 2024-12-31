@@ -5,14 +5,15 @@ import { Textarea } from "@/components/ui/textarea";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
+  disabled?: boolean;
 }
 
-export default function ChatInput({ onSend }: ChatInputProps) {
+export default function ChatInput({ onSend, disabled }: ChatInputProps) {
   const [message, setMessage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (message.trim()) {
+    if (message.trim() && !disabled) {
       onSend(message);
       setMessage("");
     }
@@ -25,8 +26,9 @@ export default function ChatInput({ onSend }: ChatInputProps) {
         onChange={(e) => setMessage(e.target.value)}
         placeholder="Type your message..."
         className="min-h-[60px] resize-none pr-12"
+        disabled={disabled}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
+          if (e.key === "Enter" && !e.shiftKey && !disabled) {
             e.preventDefault();
             handleSubmit(e);
           }
@@ -36,7 +38,7 @@ export default function ChatInput({ onSend }: ChatInputProps) {
         type="submit"
         size="icon"
         className="absolute bottom-2 right-2"
-        disabled={!message.trim()}
+        disabled={!message.trim() || disabled}
       >
         <Send className="h-4 w-4" />
       </Button>

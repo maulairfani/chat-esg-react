@@ -5,15 +5,20 @@ interface Message {
 
 interface ChatThreadProps {
   messages: Message[];
+  isStreaming?: boolean;
 }
 
 import ChatMessage from "./ChatMessage";
 
-export default function ChatThread({ messages }: ChatThreadProps) {
+export default function ChatThread({ messages, isStreaming }: ChatThreadProps) {
   return (
     <div className="space-y-4">
       {messages.map((message, index) => (
-        <ChatMessage key={index} {...message} />
+        <ChatMessage 
+          key={index} 
+          {...message} 
+          isStreaming={isStreaming && index === messages.length - 1} 
+        />
       ))}
     </div>
   );

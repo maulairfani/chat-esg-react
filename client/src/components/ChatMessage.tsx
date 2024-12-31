@@ -1,13 +1,15 @@
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/avatar";
 import { User, Bot } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
   content: string;
+  isStreaming?: boolean;
 }
 
-export default function ChatMessage({ role, content }: ChatMessageProps) {
+export default function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
   return (
     <div
       className={cn(
@@ -23,7 +25,13 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
         )}
       </Avatar>
       <div className="flex-1">
-        <p className="text-sm leading-relaxed">{content}</p>
+        <motion.p 
+          initial={isStreaming ? { opacity: 0 } : false}
+          animate={{ opacity: 1 }}
+          className="text-sm leading-relaxed"
+        >
+          {content}
+        </motion.p>
       </div>
     </div>
   );
