@@ -3,7 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronRight, MessageSquare, Plus, Menu } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format, isWithinInterval, subDays, subHours } from "date-fns";
 
 interface Chat {
@@ -17,6 +17,7 @@ interface SidebarProps {
   chats: Chat[];
   activeChat: Chat;
   onSelectChat: (chat: Chat) => void;
+  onCollapse?: (collapsed: boolean) => void;
 }
 
 interface GroupedChats {
@@ -25,8 +26,12 @@ interface GroupedChats {
   older: Chat[];
 }
 
-export default function Sidebar({ chats, activeChat, onSelectChat }: SidebarProps) {
+export default function Sidebar({ chats, activeChat, onSelectChat, onCollapse }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  useEffect(() => {
+    onCollapse?.(isCollapsed);
+  }, [isCollapsed, onCollapse]);
 
   const groupChats = (chats: Chat[]): GroupedChats => {
     const now = new Date();
@@ -77,7 +82,7 @@ export default function Sidebar({ chats, activeChat, onSelectChat }: SidebarProp
   return (
     <div
       className={cn(
-        "flex h-screen flex-col border-r transition-all duration-300",
+        "flex h-screen flex-col border-r transition-all duration-300 shrink-0",
         isCollapsed ? "w-16" : "w-64"
       )}
     >
