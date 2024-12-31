@@ -32,53 +32,45 @@ export default function DocumentSelector({
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className={cn("space-y-2", className)}
+      className={cn("flex gap-4", className)}
     >
-      <div className="space-y-1">
-        <Label className="text-base font-medium">Sustainability Report</Label>
-        <p className="text-sm text-muted-foreground">
-          Select a company and year to analyze its sustainability report
-        </p>
+      <div className="flex-1">
+        <Select value={company} onValueChange={onCompanyChange}>
+          <SelectTrigger className={cn(
+            "w-full transition-all duration-200",
+            "border-2 focus:ring-2 ring-offset-2",
+            "hover:bg-muted/50 focus:border-primary",
+            !company && "text-muted-foreground"
+          )}>
+            <SelectValue placeholder="Select a company..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="telkom">PT Telkom Indonesia Tbk</SelectItem>
+            <SelectItem value="bri">PT Bank Rakyat Indonesia Tbk</SelectItem>
+            <SelectItem value="mandiri">PT Bank Mandiri Tbk</SelectItem>
+            <SelectItem value="pln">PT PLN (Persero)</SelectItem>
+            <SelectItem value="pertamina">PT Pertamina (Persero)</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-      <div className="flex gap-4">
-        <div className="flex-1">
-          <Select value={company} onValueChange={onCompanyChange}>
-            <SelectTrigger className={cn(
-              "w-full transition-all duration-200",
-              "border-2 focus:ring-2 ring-offset-2",
-              "hover:bg-muted/50 focus:border-primary",
-              !company && "text-muted-foreground"
-            )}>
-              <SelectValue placeholder="Select a company..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="telkom">PT Telkom Indonesia Tbk</SelectItem>
-              <SelectItem value="bri">PT Bank Rakyat Indonesia Tbk</SelectItem>
-              <SelectItem value="mandiri">PT Bank Mandiri Tbk</SelectItem>
-              <SelectItem value="pln">PT PLN (Persero)</SelectItem>
-              <SelectItem value="pertamina">PT Pertamina (Persero)</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="w-32">
-          <Select value={year} onValueChange={onYearChange}>
-            <SelectTrigger className={cn(
-              "w-full transition-all duration-200",
-              "border-2 focus:ring-2 ring-offset-2",
-              "hover:bg-muted/50 focus:border-primary",
-              !year && "text-muted-foreground"
-            )}>
-              <SelectValue placeholder="Year..." />
-            </SelectTrigger>
-            <SelectContent>
-              {years.map((y) => (
-                <SelectItem key={y} value={y}>
-                  {y}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="w-32">
+        <Select value={year} onValueChange={onYearChange}>
+          <SelectTrigger className={cn(
+            "w-full transition-all duration-200",
+            "border-2 focus:ring-2 ring-offset-2",
+            "hover:bg-muted/50 focus:border-primary",
+            !year && "text-muted-foreground"
+          )}>
+            <SelectValue placeholder="Year..." />
+          </SelectTrigger>
+          <SelectContent>
+            {years.map((y) => (
+              <SelectItem key={y} value={y}>
+                {y}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </motion.div>
   );
