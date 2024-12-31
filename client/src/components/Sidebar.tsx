@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronRight, MessageSquare, Plus, Menu } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
+import { ChevronRight, MessageSquare, Plus, Menu, Leaf } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { format, isWithinInterval, subDays, subHours } from "date-fns";
@@ -88,9 +87,12 @@ export default function Sidebar({ chats, activeChat, onSelectChat, onCollapse, o
       )}
     >
       <div className="border-b p-4 flex items-center justify-between">
-        <h1 className={cn("text-2xl font-bold text-primary", isCollapsed && "hidden")}>
-          ChatESG
-        </h1>
+        <div className={cn("flex items-center gap-2", isCollapsed && "hidden")}>
+          <Leaf className="h-6 w-6 text-primary shrink-0" />
+          <h1 className="text-2xl font-bold text-primary">
+            ChatESG
+          </h1>
+        </div>
         <Button
           variant="ghost"
           size="icon"
@@ -113,9 +115,6 @@ export default function Sidebar({ chats, activeChat, onSelectChat, onCollapse, o
           <ChatGroup title="Older" chats={groupedChats.older} />
         </div>
       </ScrollArea>
-      <div className={cn("border-t p-4", isCollapsed && "hidden")}>
-        <ThemeToggle />
       </div>
-    </div>
   );
 }
