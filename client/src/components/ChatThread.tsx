@@ -56,7 +56,7 @@ export default function ChatThread({ messages, isStreaming }: ChatThreadProps) {
             <Button
               variant="outline"
               size="sm"
-              className="shadow-lg bg-background/95 backdrop-blur hover:bg-background/80 transition-all duration-200"
+              className="shadow-lg bg-background/95 backdrop-blur hover:bg-background/80 transition-all duration-200 rounded-2xl"
               onClick={scrollToBottom}
             >
               <ChevronDown className="h-4 w-4 mr-1" />
