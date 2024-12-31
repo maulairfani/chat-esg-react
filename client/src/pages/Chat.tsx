@@ -53,9 +53,6 @@ function App() {
       await new Promise(resolve => setTimeout(resolve, 1500));
     }
 
-    // Hide loading steps before starting the response
-    setShowLoadingSteps(false);
-
     // Simulate streaming response
     const response = "This is a simulated streaming response that appears gradually...";
     const sampleSources = [
@@ -90,7 +87,6 @@ function App() {
     }
 
     setIsStreaming(false);
-    setLoadingStep(-1);
   };
 
   // Check if document is selected (both company and year)
@@ -134,8 +130,13 @@ function App() {
             )}
             {activeChat.messages.length > 0 && (
               <>
+                {showLoadingSteps && (
+                  <LoadingSteps 
+                    currentStep={loadingStep} 
+                    isCompleted={!isStreaming && loadingStep === 2}
+                  />
+                )}
                 <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
-                {showLoadingSteps && <LoadingSteps currentStep={loadingStep} />}
               </>
             )}
           </div>
