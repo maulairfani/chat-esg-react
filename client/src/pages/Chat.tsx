@@ -18,12 +18,7 @@ function App() {
       id: crypto.randomUUID(),
       title: "New Chat",
       createdAt: new Date().toISOString(),
-      messages: [
-        {
-          role: "assistant" as const,
-          content: "Hello! How can I help you today?",
-        },
-      ],
+      messages: [],
     };
 
     setChats(prevChats => [newChat, ...prevChats]);
@@ -75,7 +70,15 @@ function App() {
         </div>
         <ScrollArea className="flex-1 px-4 py-6">
           <div className="mx-auto max-w-3xl">
-            <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
+            {activeChat.messages.length === 0 ? (
+              <div className="h-full flex items-center justify-center">
+                <h1 className="text-2xl font-medium text-muted-foreground">
+                  What can I help with?
+                </h1>
+              </div>
+            ) : (
+              <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
+            )}
           </div>
         </ScrollArea>
         <div className="border-t bg-background p-4">
