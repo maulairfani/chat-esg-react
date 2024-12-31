@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/avatar";
-import { Bot } from "lucide-react";
+import { Bot, Copy, ThumbsUp, ThumbsDown } from "lucide-react";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
@@ -42,6 +43,19 @@ export default function ChatMessage({ role, content, isStreaming }: ChatMessageP
         >
           {content}
         </motion.div>
+        {role === "assistant" && (
+          <div className="flex gap-2">
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Copy className="h-4 w-4 text-muted-foreground" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <ThumbsUp className="h-4 w-4 text-muted-foreground" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <ThumbsDown className="h-4 w-4 text-muted-foreground" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
