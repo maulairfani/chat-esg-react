@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Sidebar from "@/components/Sidebar";
 import ChatThread from "@/components/ChatThread";
@@ -17,17 +17,6 @@ function App() {
   const [selectedYear, setSelectedYear] = useState("");
   const [showLoadingSteps, setShowLoadingSteps] = useState(false);
   const steps = [0,1,2]; // Added steps array
-
-  // Add ref for scroll area
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-
-  // Auto scroll when messages or steps change
-  useEffect(() => {
-    if (scrollAreaRef.current) {
-      const scrollArea = scrollAreaRef.current;
-      scrollArea.scrollTop = scrollArea.scrollHeight;
-    }
-  }, [activeChat.messages, loadingStep, showLoadingSteps]);
 
   const createNewChat = () => {
     const newChat = {
@@ -129,34 +118,29 @@ function App() {
             />
           </div>
         </div>
-        <div className="flex-1 overflow-hidden">
-          <ScrollArea 
-            ref={scrollAreaRef} 
-            className="h-full px-4 py-6"
-          >
-            <div className="mx-auto max-w-3xl">
-              {activeChat.messages.length === 0 && (
-                <div className="h-full flex items-center justify-center flex-col gap-4 py-12">
-                  {!isDocumentSelected ? (
-                    <h1 className="text-2xl font-medium text-muted-foreground text-center">
-                      Select a company and year to begin analysis
-                    </h1>
-                  ) : (
-                    <h1 className="text-2xl font-medium text-muted-foreground text-center">
-                      What would you like to know about {selectedCompany}'s {selectedYear} sustainability report?
-                    </h1>
-                  )}
-                </div>
-              )}
-              {activeChat.messages.length > 0 && (
-                <>
-                  <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
-                  {showLoadingSteps && <LoadingSteps currentStep={loadingStep} />}
-                </>
-              )}
-            </div>
-          </ScrollArea>
-        </div>
+        <ScrollArea className="flex-1 px-4 py-6">
+          <div className="mx-auto max-w-3xl">
+            {activeChat.messages.length === 0 && (
+              <div className="h-full flex items-center justify-center flex-col gap-4 py-12">
+                {!isDocumentSelected ? (
+                  <h1 className="text-2xl font-medium text-muted-foreground text-center">
+                    Select a company and year to begin analysis
+                  </h1>
+                ) : (
+                  <h1 className="text-2xl font-medium text-muted-foreground text-center">
+                    What would you like to know about {selectedCompany}'s {selectedYear} sustainability report?
+                  </h1>
+                )}
+              </div>
+            )}
+            {activeChat.messages.length > 0 && (
+              <>
+                <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
+                {showLoadingSteps && <LoadingSteps currentStep={loadingStep} />}
+              </>
+            )}
+          </div>
+        </ScrollArea>
         <div className="border-t bg-background p-4">
           <div className="mx-auto max-w-3xl">
             <ChatInput
