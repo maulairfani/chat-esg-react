@@ -66,14 +66,16 @@ export default function Chat() {
         <ResizableHandle className="w-2 bg-border" />
         <ResizablePanel defaultSize={80}>
           <div className="flex h-screen flex-col">
-            <ScrollArea className="flex-1 p-4">
+            <ScrollArea className="flex-1 px-8 py-4">
               <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
             </ScrollArea>
             <div className="border-t p-4">
-              <ChatInput
-                onSend={simulateStreamingResponse}
-                disabled={isStreaming}
-              />
+              <div className="max-w-3xl mx-auto px-4">
+                <ChatInput
+                  onSend={simulateStreamingResponse}
+                  disabled={isStreaming}
+                />
+              </div>
             </div>
           </div>
         </ResizablePanel>
