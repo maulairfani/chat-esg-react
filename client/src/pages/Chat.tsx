@@ -129,8 +129,8 @@ function App() {
               onSend={simulateStreamingResponse}
               disabled={isStreaming || !isDocumentSelected}
               placeholder={!isDocumentSelected 
-                ? "Please select a company and year first" 
-                : "Ask about the sustainability report..."}
+                ? "Select a company and year to analyze..." 
+                : "Type your message..."}
             />
             <p className="text-xs text-muted-foreground text-center mt-2">
               Built with Llama. ChatESG can make mistakes.
