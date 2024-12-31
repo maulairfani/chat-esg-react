@@ -15,6 +15,8 @@ function App() {
   const [loadingStep, setLoadingStep] = useState(-1);
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
+  const [showLoadingSteps, setShowLoadingSteps] = useState(false);
+  const steps = [0,1,2]; // Added steps array
 
   const createNewChat = () => {
     const newChat = {
@@ -32,7 +34,8 @@ function App() {
     if (!selectedCompany || !selectedYear) return;
 
     setIsStreaming(true);
-    setLoadingStep(0);
+    setShowLoadingSteps(true);
+    setLoadingStep(-1);
 
     // Add user message immediately
     const updatedMessages = [...activeChat.messages, { 
@@ -45,11 +48,14 @@ function App() {
       messages: updatedMessages
     }));
 
-    // Simulate the loading steps
-    for (let step = 0; step < 3; step++) {
+    // Show loading steps one by one
+    for (let step = 0; step < steps.length; step++) {
+      setLoadingStep(step);
       await new Promise(resolve => setTimeout(resolve, 1500));
-      setLoadingStep(step + 1);
     }
+
+    // Hide loading steps before starting the response
+    setShowLoadingSteps(false);
 
     // Simulate streaming response
     const response = "This is a simulated streaming response that appears gradually...";
@@ -130,7 +136,7 @@ function App() {
             {activeChat.messages.length > 0 && (
               <>
                 <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
-                {loadingStep >= 0 && <LoadingSteps currentStep={loadingStep} />}
+                {showLoadingSteps && <LoadingSteps currentStep={loadingStep} />}
               </>
             )}
           </div>
