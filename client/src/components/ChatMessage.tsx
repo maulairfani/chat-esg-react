@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/avatar";
-import { User, Bot } from "lucide-react";
+import { Bot } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface ChatMessageProps {
@@ -17,18 +17,13 @@ export default function ChatMessage({ role, content, isStreaming }: ChatMessageP
         role === "user" ? "flex-row-reverse" : "flex-row"
       )}
     >
-      <Avatar 
-        className={cn(
-          "h-8 w-8 shrink-0",
-          role === "assistant" ? "bg-primary/10" : "bg-primary/90"
-        )}
-      >
-        {role === "assistant" ? (
+      {role === "assistant" && (
+        <Avatar 
+          className="h-8 w-8 shrink-0 bg-primary/10"
+        >
           <Bot className="h-5 w-5 text-primary" />
-        ) : (
-          <User className="h-5 w-5 text-primary-foreground" />
-        )}
-      </Avatar>
+        </Avatar>
+      )}
       <div 
         className={cn(
           "flex-1 space-y-2 overflow-hidden px-1",
