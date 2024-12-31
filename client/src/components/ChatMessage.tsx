@@ -50,7 +50,7 @@ export default function ChatMessage({ role, content, isStreaming, sources }: Cha
           initial={isStreaming ? { opacity: 0 } : false}
           animate={{ opacity: 1 }}
           className={cn(
-            "inline-block rounded-3xl px-4 py-3 text-sm shadow-md transition-all duration-200",
+            "inline-block rounded-3xl px-4 py-3 text-sm shadow-sm transition-all duration-200",
             role === "assistant" 
               ? "bg-gradient-to-br from-muted/50 via-muted/30 to-muted/10 border border-muted/20 hover:border-muted/30" 
               : "bg-gradient-to-br from-primary/90 via-primary/80 to-primary/70 text-primary-foreground"
