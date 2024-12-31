@@ -86,14 +86,12 @@ function App() {
         onNewChat={createNewChat}
       />
       <main className="flex-1 flex flex-col transition-all duration-300">
-        <div className="border-b p-4 flex items-center justify-center">
+        <div className="border-b p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Leaf className="h-5 w-5 text-primary animate-pulse" />
+            <Leaf className="h-5 w-5 text-primary" />
             <span className="text-lg font-semibold text-primary">ChatESG</span>
           </div>
-          <div className="mx-4">
-            <CompanySelector value={selectedCompany} onChange={setSelectedCompany} />
-          </div>
+          <CompanySelector value={selectedCompany} onChange={setSelectedCompany} />
         </div>
         <ScrollArea className="flex-1 px-4 py-6">
           <div className="mx-auto max-w-3xl">
