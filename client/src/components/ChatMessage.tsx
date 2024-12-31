@@ -20,7 +20,7 @@ export default function ChatMessage({ role, content, isStreaming }: ChatMessageP
       <Avatar 
         className={cn(
           "h-8 w-8 shrink-0",
-          role === "assistant" ? "bg-primary/10" : "bg-primary"
+          role === "assistant" ? "bg-primary/10" : "bg-primary/90"
         )}
       >
         {role === "assistant" ? (
@@ -39,8 +39,10 @@ export default function ChatMessage({ role, content, isStreaming }: ChatMessageP
           initial={isStreaming ? { opacity: 0 } : false}
           animate={{ opacity: 1 }}
           className={cn(
-            "inline-block rounded-lg px-3 py-2 text-sm",
-            role === "assistant" ? "bg-muted" : "bg-primary text-primary-foreground"
+            "inline-block rounded-lg px-4 py-2 text-sm shadow-sm",
+            role === "assistant" 
+              ? "bg-gradient-to-br from-muted/50 to-muted border border-muted/20" 
+              : "bg-gradient-to-br from-primary to-primary/80 text-primary-foreground"
           )}
         >
           {content}
