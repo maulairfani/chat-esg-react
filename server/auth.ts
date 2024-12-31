@@ -36,12 +36,15 @@ declare global {
 }
 
 export function setupAuth(app: Express) {
+  console.log("Setting up authentication...");
   const MemoryStore = createMemoryStore(session);
   const sessionSettings: session.SessionOptions = {
     secret: process.env.REPL_ID || "chatesg-secret",
     resave: false,
     saveUninitialized: false,
-    cookie: {},
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
     store: new MemoryStore({
       checkPeriod: 86400000, // prune expired entries every 24h
     }),
@@ -51,6 +54,7 @@ export function setupAuth(app: Express) {
     app.set("trust proxy", 1);
     sessionSettings.cookie = {
       secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
     };
   }
 
@@ -61,6 +65,7 @@ export function setupAuth(app: Express) {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
+        console.log(`Attempting login for user: ${username}`);
         const [user] = await db
           .select()
           .from(users)
@@ -68,14 +73,18 @@ export function setupAuth(app: Express) {
           .limit(1);
 
         if (!user) {
+          console.log(`User not found: ${username}`);
           return done(null, false, { message: "Incorrect username." });
         }
         const isMatch = await crypto.compare(password, user.password);
         if (!isMatch) {
+          console.log(`Invalid password for user: ${username}`);
           return done(null, false, { message: "Incorrect password." });
         }
+        console.log(`Successful login for user: ${username}`);
         return done(null, user);
       } catch (err) {
+        console.error("Login error:", err);
         return done(err);
       }
     })
@@ -94,17 +103,19 @@ export function setupAuth(app: Express) {
         .limit(1);
       done(null, user);
     } catch (err) {
+      console.error("Deserialize error:", err);
       done(err);
     }
   });
 
   app.post("/api/register", async (req, res, next) => {
     try {
+      console.log("Registration attempt:", req.body);
       const result = insertUserSchema.safeParse(req.body);
       if (!result.success) {
-        return res
-          .status(400)
-          .send("Invalid input: " + result.error.issues.map(i => i.message).join(", "));
+        const errorMessage = "Invalid input: " + result.error.issues.map(i => i.message).join(", ");
+        console.log("Registration validation error:", errorMessage);
+        return res.status(400).send(errorMessage);
       }
 
       const { username, password } = result.data;
@@ -117,6 +128,7 @@ export function setupAuth(app: Express) {
         .limit(1);
 
       if (existingUser) {
+        console.log(`Registration failed: Username ${username} already exists`);
         return res.status(400).send("Username already exists");
       }
 
@@ -132,9 +144,12 @@ export function setupAuth(app: Express) {
         })
         .returning();
 
+      console.log(`User registered successfully: ${username}`);
+
       // Log the user in after registration
       req.login(newUser, (err) => {
         if (err) {
+          console.error("Login after registration failed:", err);
           return next(err);
         }
         return res.json({
@@ -143,32 +158,38 @@ export function setupAuth(app: Express) {
         });
       });
     } catch (error) {
+      console.error("Registration error:", error);
       next(error);
     }
   });
 
   app.post("/api/login", (req, res, next) => {
+    console.log("Login attempt:", req.body);
     const result = insertUserSchema.safeParse(req.body);
     if (!result.success) {
-      return res
-        .status(400)
-        .send("Invalid input: " + result.error.issues.map(i => i.message).join(", "));
+      const errorMessage = "Invalid input: " + result.error.issues.map(i => i.message).join(", ");
+      console.log("Login validation error:", errorMessage);
+      return res.status(400).send(errorMessage);
     }
 
     const cb = (err: any, user: Express.User, info: IVerifyOptions) => {
       if (err) {
+        console.error("Login error:", err);
         return next(err);
       }
 
       if (!user) {
+        console.log("Login failed:", info.message);
         return res.status(400).send(info.message ?? "Login failed");
       }
 
       req.logIn(user, (err) => {
         if (err) {
+          console.error("Login error:", err);
           return next(err);
         }
 
+        console.log(`User logged in successfully: ${user.username}`);
         return res.json({
           message: "Login successful",
           user: { id: user.id, username: user.username },
@@ -179,20 +200,27 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/logout", (req, res) => {
+    const username = req.user?.username;
     req.logout((err) => {
       if (err) {
+        console.error("Logout error:", err);
         return res.status(500).send("Logout failed");
       }
 
+      console.log(`User logged out successfully: ${username}`);
       res.json({ message: "Logout successful" });
     });
   });
 
   app.get("/api/user", (req, res) => {
     if (req.isAuthenticated()) {
+      console.log("Current user:", req.user?.username);
       return res.json(req.user);
     }
 
+    console.log("User not authenticated");
     res.status(401).send("Not logged in");
   });
+
+  console.log("Authentication setup completed");
 }
