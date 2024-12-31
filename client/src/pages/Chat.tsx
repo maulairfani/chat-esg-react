@@ -16,7 +16,7 @@ function App() {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [showLoadingSteps, setShowLoadingSteps] = useState(false);
-  const steps = [0,1,2]; // Added steps array
+  const steps = [0,1,2]; // Added steps array for flexibility
 
   const createNewChat = () => {
     const newChat = {
@@ -82,7 +82,7 @@ function App() {
         messages: [
           ...updatedMessages,
           { 
-            role: "assistant", 
+            role: "assistant" as const, 
             content: streamedContent,
             sources: sampleSources
           }
@@ -91,7 +91,6 @@ function App() {
     }
 
     setIsStreaming(false);
-    setLoadingStep(-1);
   };
 
   // Check if document is selected (both company and year)
