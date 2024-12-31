@@ -89,7 +89,6 @@ function App() {
         <div className="border-b p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Leaf className="h-5 w-5 text-primary" />
-            <span className="text-lg font-semibold text-primary">ChatESG</span>
           </div>
           <CompanySelector value={selectedCompany} onChange={setSelectedCompany} />
         </div>
