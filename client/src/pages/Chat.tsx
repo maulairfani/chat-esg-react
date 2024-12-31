@@ -5,7 +5,7 @@ import ChatThread from "@/components/ChatThread";
 import ChatInput from "@/components/ChatInput";
 import { mockChats } from "@/lib/mockData";
 
-export default function Chat() {
+function App() {
   const [activeChat, setActiveChat] = useState(mockChats[0]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
@@ -55,7 +55,7 @@ export default function Chat() {
         onSelectChat={setActiveChat}
         onCollapse={setIsSidebarCollapsed}
       />
-      <main className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarCollapsed ? 'md:ml-16' : 'md:ml-64'}`}>
+      <main className={`flex-1 flex flex-col transition-all duration-300`}>
         <ScrollArea className="flex-1 px-4 py-4">
           <div className="mx-auto max-w-3xl">
             <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
@@ -73,3 +73,5 @@ export default function Chat() {
     </div>
   );
 }
+
+export default App;
