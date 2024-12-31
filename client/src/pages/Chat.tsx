@@ -16,7 +16,6 @@ function App() {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [showLoadingSteps, setShowLoadingSteps] = useState(false);
-  const steps = [0,1,2]; // Added steps array
 
   const createNewChat = () => {
     const newChat = {
@@ -49,7 +48,7 @@ function App() {
     }));
 
     // Show loading steps one by one
-    for (let step = 0; step < steps.length; step++) {
+    for (let step = 0; step < 3; step++) {
       setLoadingStep(step);
       await new Promise(resolve => setTimeout(resolve, 1500));
     }
