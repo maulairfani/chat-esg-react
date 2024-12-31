@@ -8,14 +8,6 @@ export const mockChats = [
         role: "assistant",
         content: "Hello! How can I help you today?",
       },
-      {
-        role: "user",
-        content: "I'd like to learn about AI.",
-      },
-      {
-        role: "assistant",
-        content: "That's great! Artificial Intelligence is a fascinating field. What specific aspects would you like to learn about?",
-      },
     ],
   },
   {

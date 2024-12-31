@@ -106,7 +106,7 @@ function App() {
         onNewChat={createNewChat}
       />
       <main className="flex-1 flex flex-col transition-all duration-300">
-        <div className="border-b p-4">
+        <div className="p-4">
           <div className="mx-auto max-w-3xl">
             <DocumentSelector
               company={selectedCompany}
@@ -140,7 +140,7 @@ function App() {
             )}
           </div>
         </ScrollArea>
-        <div className="border-t bg-background p-4">
+        <div className="bg-background p-4">
           <div className="mx-auto max-w-3xl">
             <ChatInput
               onSend={simulateStreamingResponse}

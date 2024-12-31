@@ -84,11 +84,11 @@ export default function Sidebar({ chats, activeChat, onSelectChat, onCollapse, o
   return (
     <div
       className={cn(
-        "flex h-screen flex-col border-r transition-all duration-300 shrink-0",
+        "flex h-screen flex-col transition-all duration-300 shrink-0",
         isCollapsed ? "w-16" : "w-64"
       )}
     >
-      <div className="border-b p-4 flex items-center justify-between">
+      <div className="p-4 flex items-center justify-between">
         <div className={cn("flex items-center gap-2", isCollapsed && "hidden")}>
           <Leaf className="h-6 w-6 text-primary shrink-0" />
           <h1 className="text-2xl font-bold text-primary">
@@ -104,7 +104,7 @@ export default function Sidebar({ chats, activeChat, onSelectChat, onCollapse, o
           <Menu className="h-5 w-5" />
         </Button>
       </div>
-      <div className={cn("border-b p-4", isCollapsed && "hidden")}>
+      <div className={cn("p-4", isCollapsed && "hidden")}>
         <Button className="w-full" variant="outline" onClick={onNewChat}>
           <Plus className="mr-2 h-4 w-4" />
           New Chat
@@ -117,7 +117,7 @@ export default function Sidebar({ chats, activeChat, onSelectChat, onCollapse, o
           <ChatGroup title="Older" chats={groupedChats.older} />
         </div>
       </ScrollArea>
-      <div className={cn("border-t p-4", isCollapsed && "hidden")}>
+      <div className={cn("p-4", isCollapsed && "hidden")}>
         <Button 
           className="w-full" 
           variant="ghost" 
