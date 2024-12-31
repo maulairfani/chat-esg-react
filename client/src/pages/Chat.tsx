@@ -3,7 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Sidebar from "@/components/Sidebar";
 import ChatThread from "@/components/ChatThread";
 import ChatInput from "@/components/ChatInput";
-import ModelSelector from "@/components/ModelSelector";
+import CompanySelector from "@/components/CompanySelector";
 import { mockChats } from "@/lib/mockData";
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
   const [activeChat, setActiveChat] = useState(mockChats[0]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
-  const [model, setModel] = useState("gpt-3.5");
+  const [selectedCompany, setSelectedCompany] = useState("");
 
   const createNewChat = () => {
     const newChat = {
@@ -66,7 +66,7 @@ function App() {
       />
       <main className="flex-1 flex flex-col transition-all duration-300">
         <div className="border-b p-4 flex items-center justify-center">
-          <ModelSelector value={model} onChange={setModel} />
+          <CompanySelector value={selectedCompany} onChange={setSelectedCompany} />
         </div>
         <ScrollArea className="flex-1 px-4 py-6">
           <div className="mx-auto max-w-3xl">
