@@ -26,6 +26,8 @@ function App() {
   };
 
   const simulateStreamingResponse = async (message: string) => {
+    if (!selectedCompany) return; // Don't process if no company selected
+
     setIsStreaming(true);
 
     // Add user message immediately
@@ -85,16 +87,33 @@ function App() {
         onNewChat={createNewChat}
       />
       <main className="flex-1 flex flex-col transition-all duration-300">
-        <div className="border-b p-4 flex items-center justify-center">
-          <CompanySelector value={selectedCompany} onChange={setSelectedCompany} />
+        <div className="border-b p-4">
+          <div className="mx-auto max-w-3xl">
+            <CompanySelector 
+              value={selectedCompany} 
+              onChange={setSelectedCompany}
+              className="w-full"
+            />
+          </div>
         </div>
         <ScrollArea className="flex-1 px-4 py-6">
           <div className="mx-auto max-w-3xl">
             {activeChat.messages.length === 0 ? (
-              <div className="h-full flex items-center justify-center">
-                <h1 className="text-2xl font-medium text-muted-foreground">
-                  What can I help with?
-                </h1>
+              <div className="h-full flex items-center justify-center flex-col gap-4">
+                {!selectedCompany ? (
+                  <>
+                    <h1 className="text-2xl font-medium text-muted-foreground">
+                      Please select a company first
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                      Choose a company to analyze its ESG performance
+                    </p>
+                  </>
+                ) : (
+                  <h1 className="text-2xl font-medium text-muted-foreground">
+                    What would you like to know about {selectedCompany}?
+                  </h1>
+                )}
               </div>
             ) : (
               <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
@@ -105,7 +124,8 @@ function App() {
           <div className="mx-auto max-w-3xl">
             <ChatInput
               onSend={simulateStreamingResponse}
-              disabled={isStreaming}
+              disabled={isStreaming || !selectedCompany}
+              placeholder={!selectedCompany ? "Please select a company first" : "Type your message..."}
             />
             <p className="text-xs text-muted-foreground text-center mt-2">
               Built with Llama. ChatESG can make mistakes.
