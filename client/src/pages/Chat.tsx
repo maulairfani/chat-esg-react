@@ -109,10 +109,10 @@ function App() {
                 {!isDocumentSelected ? (
                   <>
                     <h1 className="text-2xl font-medium text-muted-foreground">
-                      Select a company and year to start
+                      Please select a sustainability report first
                     </h1>
                     <p className="text-sm text-muted-foreground">
-                      Choose a company's sustainability report and its year to begin analysis
+                      Choose both company and year to start analyzing the report
                     </p>
                   </>
                 ) : (
@@ -132,7 +132,7 @@ function App() {
               onSend={simulateStreamingResponse}
               disabled={isStreaming || !isDocumentSelected}
               placeholder={!isDocumentSelected 
-                ? "Please select both company and year to start analyzing..." 
+                ? "Please select both company and year first" 
                 : "Ask about the sustainability report..."}
             />
             <p className="text-xs text-muted-foreground text-center mt-2">
