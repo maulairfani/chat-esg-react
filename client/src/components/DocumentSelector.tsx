@@ -42,7 +42,7 @@ export default function DocumentSelector({
             "hover:bg-muted/50 focus:border-primary",
             !company && "text-muted-foreground"
           )}>
-            <SelectValue placeholder="Select a company..." />
+            <SelectValue placeholder="Select a company and year to analyze..." />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="telkom">PT Telkom Indonesia Tbk</SelectItem>
