@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Sidebar from "@/components/Sidebar";
 import ChatThread from "@/components/ChatThread";
 import ChatInput from "@/components/ChatInput";
 import CompanySelector from "@/components/CompanySelector";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { mockChats } from "@/lib/mockData";
 
 function App() {
@@ -12,6 +15,12 @@ function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState("");
+  const [showScrollButton, setShowScrollButton] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const createNewChat = () => {
     const newChat = {
@@ -88,7 +97,14 @@ function App() {
         <div className="border-b p-4 flex items-center justify-center">
           <CompanySelector value={selectedCompany} onChange={setSelectedCompany} />
         </div>
-        <ScrollArea className="flex-1 px-4 py-6">
+        <ScrollArea 
+          className="flex-1 px-4 py-6"
+          onScrollCapture={(e) => {
+            const target = e.currentTarget;
+            const isNearBottom = target.scrollHeight - target.scrollTop - target.clientHeight < 100;
+            setShowScrollButton(!isNearBottom);
+          }}
+        >
           <div className="mx-auto max-w-3xl">
             {activeChat.messages.length === 0 ? (
               <div className="h-full flex items-center justify-center">
@@ -97,12 +113,36 @@ function App() {
                 </h1>
               </div>
             ) : (
-              <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
+              <ChatThread 
+                messages={activeChat.messages} 
+                isStreaming={isStreaming} 
+                bottomRef={bottomRef}
+              />
             )}
           </div>
         </ScrollArea>
-        <div className="border-t bg-background p-4">
-          <div className="mx-auto max-w-3xl">
+        <div className="border-t bg-background">
+          <div className="mx-auto max-w-3xl px-4 py-2">
+            <AnimatePresence>
+              {showScrollButton && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="mb-2 flex justify-center"
+                >
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="shadow-lg bg-background/95 backdrop-blur hover:bg-background/80 transition-all duration-200"
+                    onClick={scrollToBottom}
+                  >
+                    <ChevronDown className="h-4 w-4 mr-1" />
+                    Latest messages
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
             <ChatInput
               onSend={simulateStreamingResponse}
               disabled={isStreaming}
