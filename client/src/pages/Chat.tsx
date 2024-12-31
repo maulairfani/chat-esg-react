@@ -104,21 +104,20 @@ function App() {
         </div>
         <ScrollArea className="flex-1 px-4 py-6">
           <div className="mx-auto max-w-3xl">
-            {activeChat.messages.length === 0 ? (
-              <div className="h-full flex items-center justify-center flex-col gap-4">
+            {activeChat.messages.length === 0 && (
+              <div className="h-full flex items-center justify-center flex-col gap-4 py-12">
                 {!isDocumentSelected ? (
-                  <>
-                    <h1 className="text-2xl font-medium text-muted-foreground">
-                      Select a company and year to begin analysis
-                    </h1>
-                  </>
+                  <h1 className="text-2xl font-medium text-muted-foreground text-center">
+                    Select a company and year to begin analysis
+                  </h1>
                 ) : (
-                  <h1 className="text-2xl font-medium text-muted-foreground">
+                  <h1 className="text-2xl font-medium text-muted-foreground text-center">
                     What would you like to know about {selectedCompany}'s {selectedYear} sustainability report?
                   </h1>
                 )}
               </div>
-            ) : (
+            )}
+            {activeChat.messages.length > 0 && (
               <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
             )}
           </div>
