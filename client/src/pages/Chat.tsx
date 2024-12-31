@@ -49,7 +49,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="h-screen w-full">
+    <div className="h-screen w-full bg-background">
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel
           defaultSize={20}
@@ -66,11 +66,13 @@ export default function Chat() {
         <ResizableHandle className="w-2 bg-border" />
         <ResizablePanel defaultSize={80}>
           <div className="flex h-screen flex-col">
-            <ScrollArea className="flex-1 px-8 py-4">
-              <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
+            <ScrollArea className="flex-1 px-4 py-4 md:px-8">
+              <div className="mx-auto max-w-3xl">
+                <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
+              </div>
             </ScrollArea>
-            <div className="border-t p-4">
-              <div className="max-w-3xl mx-auto px-4">
+            <div className="border-t bg-background p-4">
+              <div className="mx-auto max-w-3xl px-4">
                 <ChatInput
                   onSend={simulateStreamingResponse}
                   disabled={isStreaming}
