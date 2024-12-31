@@ -85,7 +85,7 @@ function App() {
         onNewChat={createNewChat}
       />
       <main className="flex-1 flex flex-col transition-all duration-300">
-        <div className="border-b p-4 flex items-center justify-center">
+        <div className="p-4 flex items-center justify-center bg-background">
           <CompanySelector value={selectedCompany} onChange={setSelectedCompany} />
         </div>
         <ScrollArea className="flex-1 px-4 py-6">
@@ -101,7 +101,7 @@ function App() {
             )}
           </div>
         </ScrollArea>
-        <div className="border-t bg-background p-4">
+        <div className="p-4 bg-background">
           <div className="mx-auto max-w-3xl">
             <ChatInput
               onSend={simulateStreamingResponse}
