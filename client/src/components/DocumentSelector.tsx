@@ -26,23 +26,22 @@ export default function DocumentSelector({
 }: DocumentSelectorProps) {
   // Available years (you might want to adjust this based on available reports)
   const years = ["2024", "2023", "2022", "2021", "2020"];
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className={cn("space-y-4", className)}
+      className={cn("space-y-2", className)}
     >
-      <div className="space-y-2">
+      <div className="space-y-1">
         <Label className="text-base font-medium">Sustainability Report</Label>
         <p className="text-sm text-muted-foreground">
           Select a company and year to analyze its sustainability report
         </p>
       </div>
-      <div className="grid gap-4">
-        <div className="space-y-2">
-          <Label>Company</Label>
+      <div className="flex gap-4">
+        <div className="flex-1">
           <Select value={company} onValueChange={onCompanyChange}>
             <SelectTrigger className={cn(
               "w-full transition-all duration-200",
@@ -61,8 +60,7 @@ export default function DocumentSelector({
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2">
-          <Label>Report Year</Label>
+        <div className="w-32">
           <Select value={year} onValueChange={onYearChange}>
             <SelectTrigger className={cn(
               "w-full transition-all duration-200",
@@ -70,7 +68,7 @@ export default function DocumentSelector({
               "hover:bg-muted/50 focus:border-primary",
               !year && "text-muted-foreground"
             )}>
-              <SelectValue placeholder="Select year..." />
+              <SelectValue placeholder="Year..." />
             </SelectTrigger>
             <SelectContent>
               {years.map((y) => (
