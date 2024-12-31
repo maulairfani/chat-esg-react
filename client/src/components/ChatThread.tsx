@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 interface Message {
   role: "user" | "assistant";
   content: string;
@@ -11,6 +13,12 @@ interface ChatThreadProps {
 import ChatMessage from "./ChatMessage";
 
 export default function ChatThread({ messages, isStreaming }: ChatThreadProps) {
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <div className="space-y-6 py-2">
       {messages.map((message, index) => (
@@ -20,6 +28,7 @@ export default function ChatThread({ messages, isStreaming }: ChatThreadProps) {
           isStreaming={isStreaming && index === messages.length - 1} 
         />
       ))}
+      <div ref={bottomRef} />
     </div>
   );
 }
