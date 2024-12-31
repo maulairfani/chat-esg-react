@@ -4,7 +4,6 @@ import Sidebar from "@/components/Sidebar";
 import ChatThread from "@/components/ChatThread";
 import ChatInput from "@/components/ChatInput";
 import CompanySelector from "@/components/CompanySelector";
-import { Leaf } from "lucide-react";
 import { mockChats } from "@/lib/mockData";
 
 function App() {
@@ -86,10 +85,7 @@ function App() {
         onNewChat={createNewChat}
       />
       <main className="flex-1 flex flex-col transition-all duration-300">
-        <div className="border-b p-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Leaf className="h-5 w-5 text-primary" />
-          </div>
+        <div className="border-b p-4 flex items-center justify-center">
           <CompanySelector value={selectedCompany} onChange={setSelectedCompany} />
         </div>
         <ScrollArea className="flex-1 px-4 py-6">
