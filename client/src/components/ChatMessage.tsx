@@ -58,7 +58,7 @@ export default function ChatMessage({ role, content, isStreaming, sources }: Cha
         >
           {content}
         </motion.div>
-        {role === "assistant" && (
+        {role === "assistant" && !isStreaming && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
