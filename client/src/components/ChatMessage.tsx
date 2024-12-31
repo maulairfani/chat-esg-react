@@ -3,22 +3,14 @@ import { Avatar } from "@/components/ui/avatar";
 import { Bot, Copy, ThumbsUp, ThumbsDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import SourceCitation from "./SourceCitation";
-
-interface Source {
-  url: string;
-  pages?: string[];
-  snippet?: string;
-}
 
 interface ChatMessageProps {
   role: "user" | "assistant";
   content: string;
   isStreaming?: boolean;
-  sources?: Source[];
 }
 
-export default function ChatMessage({ role, content, isStreaming, sources }: ChatMessageProps) {
+export default function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -55,37 +47,34 @@ export default function ChatMessage({ role, content, isStreaming, sources }: Cha
           {content}
         </motion.div>
         {role === "assistant" && (
-          <>
-            {sources && <SourceCitation sources={sources} />}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="flex gap-2"
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="flex gap-2"
+          >
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 transition-colors hover:bg-muted/80"
             >
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-8 w-8 transition-colors hover:bg-muted/80"
-              >
-                <Copy className="h-4 w-4 text-muted-foreground" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-8 w-8 transition-colors hover:bg-muted/80"
-              >
-                <ThumbsUp className="h-4 w-4 text-muted-foreground" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-8 w-8 transition-colors hover:bg-muted/80"
-              >
-                <ThumbsDown className="h-4 w-4 text-muted-foreground" />
-              </Button>
-            </motion.div>
-          </>
+              <Copy className="h-4 w-4 text-muted-foreground" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 transition-colors hover:bg-muted/80"
+            >
+              <ThumbsUp className="h-4 w-4 text-muted-foreground" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 transition-colors hover:bg-muted/80"
+            >
+              <ThumbsDown className="h-4 w-4 text-muted-foreground" />
+            </Button>
+          </motion.div>
         )}
       </div>
     </motion.div>
