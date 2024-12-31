@@ -35,7 +35,7 @@ export default function ChatMessage({ role, content, isStreaming, sources }: Cha
     >
       {role === "assistant" && (
         <Avatar 
-          className="h-8 w-8 shrink-0 bg-primary/10 transition-transform hover:scale-110"
+          className="h-8 w-8 shrink-0 bg-primary/10 transition-transform hover:scale-110 rounded-xl"
         >
           <Bot className="h-5 w-5 text-primary" />
         </Avatar>
@@ -50,7 +50,7 @@ export default function ChatMessage({ role, content, isStreaming, sources }: Cha
           initial={isStreaming ? { opacity: 0 } : false}
           animate={{ opacity: 1 }}
           className={cn(
-            "inline-block rounded-lg px-4 py-3 text-sm shadow-md transition-all duration-200",
+            "inline-block rounded-3xl px-4 py-3 text-sm shadow-md transition-all duration-200",
             role === "assistant" 
               ? "bg-gradient-to-br from-muted/50 via-muted/30 to-muted/10 border border-muted/20 hover:border-muted/30" 
               : "bg-gradient-to-br from-primary/90 via-primary/80 to-primary/70 text-primary-foreground"
@@ -71,12 +71,12 @@ export default function ChatMessage({ role, content, isStreaming, sources }: Cha
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="text-xs font-medium transition-colors hover:bg-muted/80"
+                    className="text-xs font-medium transition-colors hover:bg-muted/80 rounded-lg"
                   >
                     Sources ({sources.length})
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-80">
+                <PopoverContent className="w-80 rounded-xl">
                   <div className="space-y-4">
                     {sources.map((source, index) => (
                       <div key={index} className="space-y-2">
@@ -107,21 +107,21 @@ export default function ChatMessage({ role, content, isStreaming, sources }: Cha
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-8 w-8 transition-colors hover:bg-muted/80"
+              className="h-8 w-8 transition-colors hover:bg-muted/80 rounded-lg"
             >
               <Copy className="h-4 w-4 text-muted-foreground" />
             </Button>
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-8 w-8 transition-colors hover:bg-muted/80"
+              className="h-8 w-8 transition-colors hover:bg-muted/80 rounded-lg"
             >
               <ThumbsUp className="h-4 w-4 text-muted-foreground" />
             </Button>
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-8 w-8 transition-colors hover:bg-muted/80"
+              className="h-8 w-8 transition-colors hover:bg-muted/80 rounded-lg"
             >
               <ThumbsDown className="h-4 w-4 text-muted-foreground" />
             </Button>
