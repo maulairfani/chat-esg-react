@@ -3,14 +3,26 @@ import { Avatar } from "@/components/ui/avatar";
 import { Bot, Copy, ThumbsUp, ThumbsDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+interface Source {
+  url: string;
+  page?: string;
+  snippet: string;
+}
 
 interface ChatMessageProps {
   role: "user" | "assistant";
   content: string;
   isStreaming?: boolean;
+  sources?: Source[];
 }
 
-export default function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
+export default function ChatMessage({ role, content, isStreaming, sources }: ChatMessageProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -53,6 +65,45 @@ export default function ChatMessage({ role, content, isStreaming }: ChatMessageP
             transition={{ delay: 0.2 }}
             className="flex gap-2"
           >
+            {sources && sources.length > 0 && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="text-xs font-medium transition-colors hover:bg-muted/80"
+                  >
+                    Sources ({sources.length})
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80">
+                  <div className="space-y-4">
+                    {sources.map((source, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <a 
+                            href={source.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-sm font-medium text-primary hover:underline"
+                          >
+                            {new URL(source.url).hostname}
+                          </a>
+                          {source.page && (
+                            <span className="text-xs text-muted-foreground">
+                              Page {source.page}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {source.snippet}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            )}
             <Button 
               variant="ghost" 
               size="icon" 

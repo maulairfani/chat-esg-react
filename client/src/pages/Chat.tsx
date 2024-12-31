@@ -29,7 +29,11 @@ function App() {
     setIsStreaming(true);
 
     // Add user message immediately
-    const updatedMessages = [...activeChat.messages, { role: "user" as const, content: message }];
+    const updatedMessages = [...activeChat.messages, { 
+      role: "user" as const, 
+      content: message 
+    }];
+
     setActiveChat(prev => ({
       ...prev,
       messages: updatedMessages
@@ -37,6 +41,18 @@ function App() {
 
     // Simulate streaming response
     const response = "This is a simulated streaming response that appears gradually...";
+    const sampleSources = [
+      {
+        url: "https://example.com/article1",
+        page: "5",
+        snippet: "A relevant excerpt from the source document that supports this response."
+      },
+      {
+        url: "https://example.com/article2",
+        snippet: "Another supporting piece of evidence from a different source."
+      }
+    ];
+
     let streamedContent = "";
 
     for (let i = 0; i < response.length; i++) {
@@ -47,7 +63,11 @@ function App() {
         ...prev,
         messages: [
           ...updatedMessages,
-          { role: "assistant", content: streamedContent }
+          { 
+            role: "assistant", 
+            content: streamedContent,
+            sources: sampleSources
+          }
         ]
       }));
     }
