@@ -18,6 +18,7 @@ interface SidebarProps {
   activeChat: Chat;
   onSelectChat: (chat: Chat) => void;
   onCollapse?: (collapsed: boolean) => void;
+  onNewChat: () => void;
 }
 
 interface GroupedChats {
@@ -26,7 +27,7 @@ interface GroupedChats {
   older: Chat[];
 }
 
-export default function Sidebar({ chats, activeChat, onSelectChat, onCollapse }: SidebarProps) {
+export default function Sidebar({ chats, activeChat, onSelectChat, onCollapse, onNewChat }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
@@ -100,7 +101,7 @@ export default function Sidebar({ chats, activeChat, onSelectChat, onCollapse }:
         </Button>
       </div>
       <div className={cn("border-b p-4", isCollapsed && "hidden")}>
-        <Button className="w-full" variant="outline">
+        <Button className="w-full" variant="outline" onClick={onNewChat}>
           <Plus className="mr-2 h-4 w-4" />
           New Chat
         </Button>

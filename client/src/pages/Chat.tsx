@@ -6,9 +6,27 @@ import ChatInput from "@/components/ChatInput";
 import { mockChats } from "@/lib/mockData";
 
 function App() {
+  const [chats, setChats] = useState(mockChats);
   const [activeChat, setActiveChat] = useState(mockChats[0]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
+
+  const createNewChat = () => {
+    const newChat = {
+      id: crypto.randomUUID(),
+      title: "New Chat",
+      createdAt: new Date().toISOString(),
+      messages: [
+        {
+          role: "assistant" as const,
+          content: "Hello! How can I help you today?",
+        },
+      ],
+    };
+
+    setChats(prevChats => [newChat, ...prevChats]);
+    setActiveChat(newChat);
+  };
 
   const simulateStreamingResponse = async (message: string) => {
     setIsStreaming(true);
@@ -50,10 +68,11 @@ function App() {
   return (
     <div className="flex h-screen w-full bg-background">
       <Sidebar
-        chats={mockChats}
+        chats={chats}
         activeChat={activeChat}
         onSelectChat={setActiveChat}
         onCollapse={setIsSidebarCollapsed}
+        onNewChat={createNewChat}
       />
       <main className={`flex-1 flex flex-col transition-all duration-300`}>
         <ScrollArea className="flex-1 px-4 py-4">
