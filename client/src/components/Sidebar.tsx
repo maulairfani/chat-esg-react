@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronRight, MessageSquare, Plus, Menu, Leaf } from "lucide-react";
+import { ChevronRight, MessageSquare, Plus, Menu, Leaf, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { format, isWithinInterval, subDays, subHours } from "date-fns";
+import { useUser } from "@/hooks/use-user";
 
 interface Chat {
   id: string;
@@ -28,6 +29,7 @@ interface GroupedChats {
 
 export default function Sidebar({ chats, activeChat, onSelectChat, onCollapse, onNewChat }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const { logout } = useUser();
 
   useEffect(() => {
     onCollapse?.(isCollapsed);
@@ -115,6 +117,17 @@ export default function Sidebar({ chats, activeChat, onSelectChat, onCollapse, o
           <ChatGroup title="Older" chats={groupedChats.older} />
         </div>
       </ScrollArea>
+      <div className={cn("border-t p-4", isCollapsed && "hidden")}>
+        <Button 
+          className="w-full" 
+          variant="ghost" 
+          onClick={() => logout()}
+          size="sm"
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Logout
+        </Button>
       </div>
+    </div>
   );
 }
