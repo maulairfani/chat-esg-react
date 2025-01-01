@@ -1,4 +1,6 @@
-export const mockChats = [
+import { Chat } from "@/types/chatTypes"
+
+export const mockChats: Chat[] = [
   {
     id: "1",
     title: "General Chat",

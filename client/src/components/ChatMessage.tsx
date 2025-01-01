@@ -11,7 +11,7 @@ import {
 
 interface Source {
   url: string;
-  page?: string;
+  pages?: number[];  // Mengubah pages menjadi list of int
   snippet: string;
 }
 
@@ -23,6 +23,15 @@ interface ChatMessageProps {
 }
 
 export default function ChatMessage({ role, content, isStreaming, sources }: ChatMessageProps) {
+  const isValidUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -62,7 +71,7 @@ export default function ChatMessage({ role, content, isStreaming, sources }: Cha
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 1 }}
             className="flex gap-2"
           >
             {sources && sources.length > 0 && (
@@ -81,17 +90,23 @@ export default function ChatMessage({ role, content, isStreaming, sources }: Cha
                     {sources.map((source, index) => (
                       <div key={index} className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <a 
-                            href={source.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-sm font-medium text-primary hover:underline"
-                          >
-                            {new URL(source.url).hostname}
-                          </a>
-                          {source.page && (
+                          {isValidUrl(source.url) ? (
+                            <a 
+                              href={source.url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-sm font-medium text-primary hover:underline"
+                            >
+                              {new URL(source.url).hostname}
+                            </a>
+                          ) : (
+                            <span className="text-sm font-medium text-red-500">
+                              Invalid URL
+                            </span>
+                          )}
+                          {source.pages && source.pages.length > 0 && (
                             <span className="text-xs text-muted-foreground">
-                              Page {source.page}
+                              Pages {source.pages.join(", ")}
                             </span>
                           )}
                         </div>

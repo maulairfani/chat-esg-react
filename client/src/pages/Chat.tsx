@@ -6,9 +6,10 @@ import ChatInput from "@/components/ChatInput";
 import DocumentSelector from "@/components/DocumentSelector";
 import LoadingSteps from "@/components/LoadingSteps";
 import { mockChats } from "@/lib/mockData";
+import { Chat } from "@/types/chatTypes";
 
 function App() {
-  const [chats, setChats] = useState(mockChats);
+  const [chats, setChats] = useState<Chat[]>(mockChats);
   const [activeChat, setActiveChat] = useState(mockChats[0]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
@@ -16,7 +17,9 @@ function App() {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [showLoadingSteps, setShowLoadingSteps] = useState(false);
-  const steps = [0,1,2]; // Added steps array for flexibility
+  const [sources, setSources] = useState([]);
+  const [tools, setTools] = useState<string[]>([]);
+  const [bsid, setBsid] = useState("");  // State untuk bsid
 
   const createNewChat = () => {
     const newChat = {
@@ -26,74 +29,123 @@ function App() {
       messages: [],
     };
 
-    setChats(prevChats => [newChat, ...prevChats]);
+    setChats((prevChats) => [newChat, ...prevChats]);
     setActiveChat(newChat);
+    setBsid("");  // Reset bsid ketika membuka chat baru
   };
 
-  const simulateStreamingResponse = async (message: string) => {
+  const handleStreamingResponse = async (message: string) => {
     if (!selectedCompany || !selectedYear) return;
-
+  
     setIsStreaming(true);
     setShowLoadingSteps(true);
     setLoadingStep(-1);
-
-    // Add user message immediately
-    const updatedMessages = [...activeChat.messages, { 
-      role: "user" as const, 
-      content: message 
-    }];
-
-    setActiveChat(prev => ({
-      ...prev,
-      messages: updatedMessages
-    }));
-
-    // Show loading steps one by one
-    for (let step = 0; step < steps.length; step++) {
-      setLoadingStep(step);
-      await new Promise(resolve => setTimeout(resolve, 1500));
-    }
-
-    // Hide loading steps before starting the response
-    setShowLoadingSteps(false);
-
-    // Simulate streaming response
-    const response = "This is a simulated streaming response that appears gradually...";
-    const sampleSources = [
-      {
-        url: "https://example.com/article1",
-        page: "5",
-        snippet: "A relevant excerpt from the source document that supports this response."
-      },
-      {
-        url: "https://example.com/article2",
-        snippet: "Another supporting piece of evidence from a different source."
-      }
+    setTools([]);
+  
+    const updatedMessages = [
+      ...activeChat.messages,
+      { role: "user" as "user", content: message },
     ];
+  
+    setActiveChat((prev) => ({
+      ...prev,
+      messages: updatedMessages,
+    }));
+  
+    const chatPayload = {
+      src: "skripsi",
+      model: "gpt-4o-mini",
+      inputs: [{ type: "text", role: "user", content: message }],
+      bsid: bsid || undefined,  // Kirim bsid jika tersedia
+    };
+  
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "test-uid": "#test-uid",
+        },
+        body: JSON.stringify(chatPayload),
+      });
+  
+      let reader: ReadableStreamDefaultReader | null = null;
 
-    let streamedContent = "";
+      if (response.body) {
+        reader = response.body.getReader();
+      } else {
+        console.error("Response body is null");
+      }
+      
+      let streamedContent = "";
+      let currentTools: string[] = [];
+  
+      while (true) {
+        if (!reader) break;
+        const { value, done } = await reader.read();
+        if (done) break;
+  
+        const text = new TextDecoder().decode(value);
+        console.log(text);
 
-    for (let i = 0; i < response.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, 50));
-      streamedContent += response[i];
-
-      setActiveChat(prev => ({
-        ...prev,
-        messages: [
-          ...updatedMessages,
-          { 
-            role: "assistant" as const, 
-            content: streamedContent,
-            sources: sampleSources
+        const chunks = text
+          .replace(/}\n{/g, "}|SPLIT|{")
+          .split("|SPLIT|")
+          .filter(chunk => chunk.trim() !== "");
+  
+        for (const chunk of chunks) {
+          try {
+            const data = JSON.parse(chunk);
+  
+            // Perbarui bsid jika tersedia dari respons API
+            if (data.bsid) {
+              setBsid(data.bsid);
+            }
+  
+            if (data.tools.length > 0) {
+              for (const tool of data.tools) {
+                if (!currentTools.includes(tool)) {
+                  currentTools.push(tool);
+                  setTools([...currentTools]);
+                  setLoadingStep(currentTools.length - 1);
+                }
+              }
+            }
+  
+            if (data.responses && data.responses.length > 0) {
+              streamedContent = data.responses[0];
+  
+              setActiveChat((prev) => ({
+                ...prev,
+                messages: [
+                  ...updatedMessages,
+                  {
+                    role: "assistant",
+                    content: streamedContent,
+                    sources: data.sources || [],
+                  },
+                ],
+              }));
+  
+              setShowLoadingSteps(false);
+            }
+  
+            if (data.sources) {
+              setSources(data.sources);
+            }
+          } catch (error) {
+            console.error("JSON parsing error:", error, "at chunk:", chunk);
           }
-        ]
-      }));
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching from API:", error);
+    } finally {
+      setIsStreaming(false);
     }
-
-    setIsStreaming(false);
   };
+  
 
-  // Check if document is selected (both company and year)
   const isDocumentSelected = selectedCompany && selectedYear;
 
   return (
@@ -127,15 +179,21 @@ function App() {
                   </h1>
                 ) : (
                   <h1 className="text-2xl font-medium text-muted-foreground text-center">
-                    What would you like to know about {selectedCompany}'s {selectedYear} sustainability report?
+                    What would you like to know about {selectedCompany}'s{" "}
+                    {selectedYear} sustainability report?
                   </h1>
                 )}
               </div>
             )}
             {activeChat.messages.length > 0 && (
               <>
-                <ChatThread messages={activeChat.messages} isStreaming={isStreaming} />
-                {showLoadingSteps && <LoadingSteps currentStep={loadingStep} />}
+                <ChatThread
+                  messages={activeChat.messages}
+                  isStreaming={isStreaming}
+                />
+                {showLoadingSteps && (
+                  <LoadingSteps currentStep={loadingStep} steps={tools} />
+                )}
               </>
             )}
           </div>
@@ -143,11 +201,13 @@ function App() {
         <div className="bg-background p-4">
           <div className="mx-auto max-w-3xl">
             <ChatInput
-              onSend={simulateStreamingResponse}
+              onSend={handleStreamingResponse}
               disabled={isStreaming || !isDocumentSelected}
-              placeholder={!isDocumentSelected 
-                ? "Select a company and year to analyze..." 
-                : "Type your message..."}
+              placeholder={
+                !isDocumentSelected
+                  ? "Select a company and year to chat..."
+                  : "Type your message..."
+              }
             />
             <p className="text-xs text-muted-foreground text-center mt-2">
               Built with Llama. ChatESG can make mistakes.
